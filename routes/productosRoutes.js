@@ -1,54 +1,58 @@
 const express = require("express");
-const jsonServer = require("json-server");
 const router = express.Router();
-const validateProduct = require("../middlewares/productos/validateProduct");
-const validarEliminarProducto = require("../middlewares/productos/deleteProduct");
-const validarActualizarProducto = require("../middlewares/productos/validatePatchProduct");
-const fs = require("fs");
-// Instancia del router de JSON Server
-const jsonRouter = jsonServer.router("db.json");
+const Producto = require("../models/Producto");
+const validateProduct = require("../middlewares/productos/validateProduct")
 
-router.post("/", validateProduct);
-router.put("/:id", validateProduct);
-router.patch("/:id", validarActualizarProducto, (req, res) => {
-  try {
-    // Obtenemos los datos actuales del producto
-    const producto = req.productos[req.productoIndex];
-
-    // Actualizamos solo los campos enviados en la petición
-    Object.assign(producto, req.body);
-
-    // Guardamos los cambios en db.json
-    const rawData = fs.readFileSync("db.json", "utf8");
-    const data = JSON.parse(rawData);
-    data.productos[req.productoIndex] = producto;
-    fs.writeFileSync("db.json", JSON.stringify(data, null, 2));
-
-    return res.json({
-      mensaje: "Producto actualizado correctamente",
-      productoActualizado: producto,
-    });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ error: "Error al actualizar el producto" });
-  }
-});
-// Middleware de validación antes de eliminar
-router.delete("/:id", validarEliminarProducto, (req, res, next) => {
-  return res.json({
-    mensaje: "Producto eliminado correctamente",
-    productoEliminado: req.productoEliminado
-  });
+// Obtener todos los productos
+router.get("/", (req, res) => {
+    const productos = Producto.getAll();
+    res.status(200).json(productos);
 });
 
+// Obtener un producto por ID
+router.get("/:id", (req, res) => {
+    const producto = Producto.getById(req.params.id);
+    if (producto) {
+      res.status(200).json(producto);
+    } else {
+      res.status(404).json({ message: "Producto no encontrado" });
+    }
+});
 
-// Redirigir operaciones al router de JSON Server
-router.use((req, res, next) => {
-  // console.log(`Método: ${req.method} | URL: ${req.originalUrl} -> ${req.url}`);
-  req.url = `/productos${req.url}`;
-  // console.log(req.url);  
-  jsonRouter.handle(req, res, next);
+// Crear un nuevo producto
+router.post("/", validateProduct, (req, res) => {
+    const producto = Producto.create(req.body);
+    res.status(201).json(producto);
+});
+
+router.put("/:id", (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const data = req.body;
+  const productoActualizado = Producto.update(id, data);
+    if (!productoActualizado) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+    res.json(productoActualizado);
+})
+
+// Actualizar un producto
+router.patch("/:id", (req, res) => {
+    const producto = Producto.update(req.params.id, req.body);
+    if (producto) {
+      res.status(200).json(producto);
+    } else {
+      res.status(404).json({ message: "Producto no encontrado" });
+    }
+});
+
+// Eliminar un producto
+router.delete("/:id", (req, res) => {
+    const resultado = Producto.delete(req.params.id);
+    if (resultado) {
+      res.status(200).json({ message: "Producto eliminado correctamente" });
+    } else {
+      res.status(400).json({ message: "Producto no encontrado" });
+    }
 });
 
 module.exports = router;

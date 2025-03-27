@@ -1,38 +1,66 @@
 {
   "categorias": [
     {
-      "nombre": "Deportivos",
+      "nombre": "Modelo modificado parcial",
       "id": 1
     },
     {
-      "id": 2,
-      "nombre": "Niños"
+      "id": 1743087022151,
+      "nombre": "Categoria Modelo 2"
     },
     {
-      "nombre": "Zapateria",
-      "id": 3
+      "id": 1743088418937,
+      "nombre": "Categoria Modelo 3"
     }
   ],
   "productos": [
     {
-      "id": 1,
-      "nombre": "Calzado caballero tipo tenis",
-      "categoria_id": 2,
-      "descripcion": "Calzado para caballero marca Lugo Conti de uso casual en color besh. Este bonito calzado es un zapato tipo tenis para dar mucho mas comodidad, es ligero y con un diseño atractivo a la vista, su suela corrida en tono beige le da el contraste perfecto para lucirlos donde quieras",
-      "precio": 150
+      "nombre": "Calzado mujer tiposss",
+      "descripcion": "salo para mujeressss",
+      "categoria_id": "2",
+      "id": 1
     },
     {
-      "id": 2,
-      "nombre": "Camisa para niños con manga larga",
-      "categoria_id": 2,
-      "descripcion": "Una camisa ligera, generalmente de punto, ajustada, con cuello redondo y mangas cortas, que se usa como camiseta interior o prenda exterior.",
-      "precio": 50
+      "nombre": "Calzado hombre tipo tenis",
+      "descripcion": "salo para hombres",
+      "categoria_id": "1",
+      "id": 2
+    },
+    {
+      "nombre": "Calzado hombre tipo tenis",
+      "descripcion": "salo para hombres",
+      "categoria_id": "1",
+      "id": 4
     },
     {
       "nombre": "Camiseta economica",
-      "descripcion": "Saldo de camisetas economicas",
-      "categoria_id": "2",
-      "id": 3
+      "descripcion": "Saldo de camisetas ec",
+      "categoria_id": "1",
+      "id": 5
+    },
+    {
+      "nombre": "Calzado hombre tipo tenis",
+      "descripcion": "salo para hombres",
+      "categoria_id": "1",
+      "id": 6
+    },
+    {
+      "nombre": "Calzado hombre tipo tenis",
+      "descripcion": "salo para hombres",
+      "categoria_id": "1",
+      "id": 7
+    },
+    {
+      "id": 1743085885200,
+      "nombre": "Calzado hombre tipo tenis",
+      "descripcion": "salo para hombres",
+      "categoria_id": "1"
+    },
+    {
+      "id": 1743086714153,
+      "nombre": "Calzado hombre tipo tenis",
+      "descripcion": "salo para hombres",
+      "categoria_id": "1"
     }
   ]
 }
