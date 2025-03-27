@@ -1,15 +1,15 @@
 {
   "categorias": [
     {
-      "id": 1,
-      "nombre": "Hombres"
+      "nombre": "Deportivos",
+      "id": 1
     },
     {
       "id": 2,
       "nombre": "Niños"
     },
     {
-      "nombre": "dato modificado",
+      "nombre": "Zapateria",
       "id": 3
     }
   ],
@@ -27,6 +27,12 @@
       "categoria_id": 2,
       "descripcion": "Una camisa ligera, generalmente de punto, ajustada, con cuello redondo y mangas cortas, que se usa como camiseta interior o prenda exterior.",
       "precio": 50
+    },
+    {
+      "nombre": "Camiseta economica",
+      "descripcion": "Saldo de camisetas economicas",
+      "categoria_id": "2",
+      "id": 3
     }
   ]
 }

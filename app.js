@@ -1,6 +1,7 @@
 const express = require("express");
 const jsonServer = require("json-server");
 const categoriasRoutes = require("./routes/categoriasRoutes");
+const productosRoutes = require("./routes/productosRoutes");
 
 const server = express();
 const middlewares = jsonServer.defaults();
@@ -13,6 +14,7 @@ server.use(express.urlencoded({ extended: true }));
 
 // Usar rutas personalizadas
 server.use("/api/categorias", categoriasRoutes);
+server.use("/api/productos", productosRoutes);
 
 // Usar json-server para el resto de las rutas
 const router = jsonServer.router("db.json");
