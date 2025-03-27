@@ -1,0 +1,32 @@
+{
+  "categorias": [
+    {
+      "id": 1,
+      "nombre": "Hombres"
+    },
+    {
+      "id": 2,
+      "nombre": "Niños"
+    },
+    {
+      "nombre": "dato modificado",
+      "id": 3
+    }
+  ],
+  "productos": [
+    {
+      "id": 1,
+      "nombre": "Calzado caballero tipo tenis",
+      "categoria_id": 2,
+      "descripcion": "Calzado para caballero marca Lugo Conti de uso casual en color besh. Este bonito calzado es un zapato tipo tenis para dar mucho mas comodidad, es ligero y con un diseño atractivo a la vista, su suela corrida en tono beige le da el contraste perfecto para lucirlos donde quieras",
+      "precio": 150
+    },
+    {
+      "id": 2,
+      "nombre": "Camisa para niños con manga larga",
+      "categoria_id": 2,
+      "descripcion": "Una camisa ligera, generalmente de punto, ajustada, con cuello redondo y mangas cortas, que se usa como camiseta interior o prenda exterior.",
+      "precio": 50
+    }
+  ]
+}
