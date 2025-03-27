@@ -1,5 +1,5 @@
 import express from "express";
-
+import { validateCategoria } from "../middlewares/categorias/validarCategoria.js";
 import {
   createCategoria,
   deleteCategoria,
@@ -17,7 +17,7 @@ router.get("/", getAllCategorias);
 router.get("/:id", getCategoriaById);
 
 // Crear una nueva categoría
-router.post("/", createCategoria);
+router.post("/", validateCategoria, createCategoria);
 
 // Actualizar una categoría
 router.put("/:id", updateCategoria);
