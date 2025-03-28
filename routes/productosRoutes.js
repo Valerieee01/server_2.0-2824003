@@ -1,31 +1,24 @@
 import express from "express";
 
-import {
-  getAllProductos,
-  getProductoById,
-  createProducto,
-  updateProducto,
-  updatePartialProduct,
-  deleteProduct
-} from "../controllers/productoController.js";
+import ProductoController from "../controllers/ProductoController.js";
 
 const router = express.Router();
 
 // Obtener todos los productos
-router.get("/", getAllProductos);
+router.get("/", ProductoController.getAllProductos);
 
 // Obtener un producto por ID
-router.get("/:id", getProductoById);
+router.get("/:id", ProductoController.getProductoById);
 
 // Crear un nuevo producto
-router.post("/", createProducto);
+router.post("/", ProductoController.createProducto);
 
-router.put("/:id", updateProducto);
+router.put("/:id", ProductoController.updateProducto);
 
 // Actualizar un producto
-router.patch("/:id", updatePartialProduct);
+router.patch("/:id", ProductoController.updatePartialProduct);
 
 // Eliminar un producto
-router.delete("/:id", deleteProduct);
+router.delete("/:id", ProductoController.deleteProduct);
 
 export default router;
