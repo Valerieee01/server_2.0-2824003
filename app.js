@@ -4,10 +4,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import productoRoutes from "./routes/productosRoutes.js";
-import categoriasRoutes from "./routes/categoriasRoutes.js";
-import authRoutes from "./routes/authRoutes.js";
-import administradorRoutes from "./routes/administradorRoutes.js";
+import productoRoutes from "./src/routes/productosRoutes.js";
+import categoriasRoutes from "./src/routes/categoriasRoutes.js";
+import authRoutes from "./src/routes/authRoutes.js";
+import administradorRoutes from "./src/routes/administradorRoutes.js";
 
 dotenv.config();
 
