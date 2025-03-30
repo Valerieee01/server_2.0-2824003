@@ -1,31 +1,31 @@
-const express = require("express");
-const jsonServer = require("json-server");
+import express from "express";
+import { validateCategoria } from "../middlewares/categorias/validarCategoria.js";
+import {
+  createCategoria,
+  deleteCategoria,
+  getAllCategorias,
+  getCategoriaById,
+  updateCategoria,
+} from "../controllers/categoriaController.js";
+
 const router = express.Router();
-const validateCategory = require("../middlewares/categorias/validateCategory");
-const validarEliminarCategoria = require("../middlewares/categorias/deleteCategory");
 
-// Instancia del router de JSON Server
-const jsonRouter = jsonServer.router("db.json");
+// Obtener todas las categorías
+router.get("/", getAllCategorias);
 
-// Middleware de validación SOLO para POST, PUT y PATCH
-router.post("/", validateCategory);
-router.put("/:id", validateCategory);
-router.patch("/:id", validateCategory, (req, res, next) => next());
-// Ruta para eliminar una categoría (usando middleware)
-router.delete("/:id", validarEliminarCategoria, (req, res) => {
-  return res.json({
-    mensaje: "Categoría eliminada correctamente",
-    categoriaEliminada: req.categoriaEliminada
-  });
-});
+// Obtener una categoría por ID
+router.get("/:id", getCategoriaById);
 
+// Crear una nueva categoría
+router.post("/", validateCategoria, createCategoria);
 
-// Redirigir operaciones al router de JSON Server
-router.use((req, res, next) => {
-  // console.log(`Método: ${req.method} | URL: ${req.originalUrl} -> ${req.url}`);
-  req.url = `/categorias${req.url}`;
-  // console.log(req.url);  
-  jsonRouter.handle(req, res, next);
-});
+// Actualizar una categoría
+router.put("/:id", updateCategoria);
 
-module.exports = router;
+// Actualizar parcialmente una categoría
+router.patch("/:id", updateCategoria);
+
+// Eliminar una categoría
+router.delete("/:id", deleteCategoria);
+
+export default router;

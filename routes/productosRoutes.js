@@ -1,54 +1,31 @@
-const express = require("express");
-const jsonServer = require("json-server");
+import express from "express";
+
+import {
+  getAllProductos,
+  getProductoById,
+  createProducto,
+  updateProducto,
+  updatePartialProduct,
+  deleteProduct
+} from "../controllers/productoController.js";
+
 const router = express.Router();
-const validateProduct = require("../middlewares/productos/validateProduct");
-const validarEliminarProducto = require("../middlewares/productos/deleteProduct");
-const validarActualizarProducto = require("../middlewares/productos/validatePatchProduct");
-const fs = require("fs");
-// Instancia del router de JSON Server
-const jsonRouter = jsonServer.router("db.json");
 
-router.post("/", validateProduct);
-router.put("/:id", validateProduct);
-router.patch("/:id", validarActualizarProducto, (req, res) => {
-  try {
-    // Obtenemos los datos actuales del producto
-    const producto = req.productos[req.productoIndex];
+// Obtener todos los productos
+router.get("/", getAllProductos);
 
-    // Actualizamos solo los campos enviados en la petición
-    Object.assign(producto, req.body);
+// Obtener un producto por ID
+router.get("/:id", getProductoById);
 
-    // Guardamos los cambios en db.json
-    const rawData = fs.readFileSync("db.json", "utf8");
-    const data = JSON.parse(rawData);
-    data.productos[req.productoIndex] = producto;
-    fs.writeFileSync("db.json", JSON.stringify(data, null, 2));
+// Crear un nuevo producto
+router.post("/", createProducto);
 
-    return res.json({
-      mensaje: "Producto actualizado correctamente",
-      productoActualizado: producto,
-    });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ error: "Error al actualizar el producto" });
-  }
-});
-// Middleware de validación antes de eliminar
-router.delete("/:id", validarEliminarProducto, (req, res, next) => {
-  return res.json({
-    mensaje: "Producto eliminado correctamente",
-    productoEliminado: req.productoEliminado
-  });
-});
+router.put("/:id", updateProducto);
 
+// Actualizar un producto
+router.patch("/:id", updatePartialProduct);
 
-// Redirigir operaciones al router de JSON Server
-router.use((req, res, next) => {
-  // console.log(`Método: ${req.method} | URL: ${req.originalUrl} -> ${req.url}`);
-  req.url = `/productos${req.url}`;
-  // console.log(req.url);  
-  jsonRouter.handle(req, res, next);
-});
+// Eliminar un producto
+router.delete("/:id", deleteProduct);
 
-module.exports = router;
+export default router;

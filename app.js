@@ -1,25 +1,36 @@
-const express = require("express");
-const jsonServer = require("json-server");
-const categoriasRoutes = require("./routes/categoriasRoutes");
-const productosRoutes = require("./routes/productosRoutes");
+import express from "express";
+// import multer from "multer";
+import dotenv from "dotenv";
+import cors from "cors";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import productoRoutes from "./routes/productosRoutes.js";
+import categoriasRoutes from "./routes/categoriasRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import administradorRoutes from "./routes/administradorRoutes.js";
 
-const server = express();
-const middlewares = jsonServer.defaults();
+dotenv.config();
 
-server.use(middlewares);
-// Habilitar el manejo de JSON en el body
-server.use(express.json()); 
-// Asegurar compatibilidad con URL encoded
-server.use(express.urlencoded({ extended: true })); 
+// Crear la instancia de Express
+const app = express();
+// Middleware
+// Habilita CORS
+app.use(cors()); 
+// Permite que la app acepte datos JSON
+app.use(bodyParser.json()); 
+// app.use(express.json());
+// Permite el envio de datos de tipo utlencode
+app.use(express.urlencoded({ extended: true }));
+// Permite manejar cookies en las respuestas.
+app.use(cookieParser());
+// Rutas
+app.use('/api/productos', productoRoutes);
+app.use("/api/categorias", categoriasRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/admin", administradorRoutes);
 
-// Usar rutas personalizadas
-server.use("/api/categorias", categoriasRoutes);
-server.use("/api/productos", productosRoutes);
-
-// Usar json-server para el resto de las rutas
-const router = jsonServer.router("db.json");
-server.use("/api", router);
-
-server.listen(3000, () => {
-  console.log("JSON Server corriendo en http://localhost:3000/api");
+// Puerto para ejecutar el servidor
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Servidor corriendo en http://localhost:${port}`);
 });
