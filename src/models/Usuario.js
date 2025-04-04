@@ -11,6 +11,7 @@ export class Usuario {
   }
 
   static async create(nombre, email, hashedPassword) {
+    console.log(nombre, email, hashedPassword);
     const [result] = await db.query(
       "INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)",
       [nombre, email, hashedPassword]
