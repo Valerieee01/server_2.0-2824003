@@ -34,6 +34,14 @@ CREATE TABLE productos (
   FOREIGN KEY (categoria_id) REFERENCES categorias(id) ON DELETE SET NULL -- Establece la relación y comportamiento al eliminar una categoría
 );
 
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    refresh_token TEXT
+);
+
 
 INSERT INTO categorias (nombre, descripcion) VALUES
 ('Electrónica', 'Categoría para productos electrónicos'),
@@ -49,6 +57,7 @@ INSERT INTO productos (nombre, descripcion, precio, categoria_id) VALUES
 
 select * from categorias;
 select * from productos;
+select * from usuarios;
 
 SELECT p.id, p.nombre AS producto, p.descripcion, p.precio, c.nombre AS categoria
 FROM productos p
