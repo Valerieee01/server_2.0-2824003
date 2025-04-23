@@ -8,17 +8,27 @@ class Producto {
     this.categoria_id = categoria_id;
   }
 
-  // Obtener todos los productos
+  /**
+   * Método para obtener los productos almacenados en la base de datos
+   * 
+   * @returns {QueryResult} Areglo de productos obtenidos de la base de datos
+   */
   async getAll() {
     try {
       const [rows] = await connection.query("SELECT * FROM productos");
-      return rows; // Retorna los productos obtenidos
+      // Retorna los productos obtenidos
+      return rows; 
     } catch (error) {
       throw new Error("Error al obtener los productos");
     }
   }
 
-  // Método para obtener un producto por su id
+  /**
+   * Método para obtener un producto por su id
+   * 
+   * @param {Number} id Identificador del producto 
+   * @returns {Object} Objeto producto
+   */
   async getById(id) {
     try {
       const [rows] = await connection.query("SELECT * FROM productos WHERE id = ?", [
@@ -33,7 +43,11 @@ class Producto {
     }
   }
 
-  // Método para crear un nuevo producto
+  /**
+   * Método para crear un nuevo producto
+   * 
+   * @returns {Object} Objeto producto
+   */
   async create() {
     try {
       const [result] = await connection.query(
@@ -52,7 +66,12 @@ class Producto {
     }
   }
 
-  // Método para actualizar un producto
+  /**
+   * Método para actualizar un producto
+   * 
+   * @param {Number} id Identificador del producto 
+   * @returns {Object} Objeto producto actualizado
+   */
   async update(id) {
     try {
       const [result] = await connection.query(
@@ -75,7 +94,13 @@ class Producto {
     }
   }
 
-  // Actualizacion parcial del modelo
+  /**
+   * Método para actualizar parcial del modelo
+   * 
+   * @param {*} id 
+   * @param {Object} campos del producto a actualizar
+   * @returns {Object} objeto producto actualizado
+   */
   async updatePartial(id, campos) {
     let query = "UPDATE productos SET ";
     let params = [];
@@ -102,7 +127,11 @@ class Producto {
     }
   }
 
-  // Eliminar un producto
+  /**
+   * Método para eliminar un prodcuto
+   * @param {Number} id identificador del producto 
+   * @returns {String} Mensaje de respuesta
+   */
   async delete(id) {
     try {
       // Procedemos con la eliminación si no está relacionada
