@@ -45,14 +45,22 @@ class AuthService {
     try {
       // Consultamos el usuario por el email
       const user = await Usuario.findByEmail(email);
-      // Validamos si el usuario esta registrado en la base de datos
+      // Validamos si el usuario esta registrado en la base de datos      
       if (!user)
-        return { error: true, code: 401, message: "Credenciales inválidas" };
+        return {
+          error: true,
+          code: 401,
+          message: "El correo o la contraseña proporcionados no son correctos.",
+        };
       // Comparmamos la contraseña del usuarios registrado con la ingresada basado en la llave de encriptación
       const validPassword = await bcrypt.compare(password, user.password);
       // Validamos si la contraseña es la misma
       if (!validPassword)
-        return { error: true, code: 401, message: "Credenciales inválidas" };
+        return {
+          error: true,
+          code: 401,
+          message: "El correo o la contraseña proporcionados no son correctos.",
+        };
       // Generamos el token de seguridad
       const accessToken = this.generateAccessToken(user);
       // Generamos el refresh token
@@ -63,11 +71,14 @@ class AuthService {
       return {
         error: false,
         code: 201,
-        message: "Usuario autenticado",
-        accessToken,
-        refreshToken,
+        message: "Usuario autenticado correctamente",
+        data: {
+          accessToken,
+          refreshToken,
+        },
       };
     } catch (error) {
+      console.log(error);      
       return { error: true, code: 500, message: "Error en el servidor" };
     }
   }
@@ -130,8 +141,10 @@ class AuthService {
           error: false,
           code: 201,
           message: "Token actualizado correctamente",
+          data: {
           accessToken,
           refreshToken,
+          },
         };
     } catch (error) {
       if (error.name === "TokenExpiredError") {
@@ -141,7 +154,6 @@ class AuthService {
           message: "Token expirado, solicita un nuevo token",
         };
       }
-      console.log("llega");
       return { error: true, code: 403, message: "Token inválido" };
     }
   }

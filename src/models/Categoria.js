@@ -21,6 +21,18 @@ class Categoria {
       const [rows] = await connection.query("SELECT * FROM categorias WHERE id = ?", [
         id,
       ]);
+
+
+      /**
+       * 
+       * 
+       * Push select * from prodcutos where categoria_id = 2
+       * 
+       * 
+       */
+
+
+
       if (rows.length === 0) {
         throw new Error("Categoría no encontrada");
       }
