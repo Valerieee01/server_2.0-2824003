@@ -3,7 +3,6 @@ import AuthService from "../services/AuthService.js";
 
 export const register = async (req, res) => {
   const { nombre, email, password } = req.body;
-  
   try {
     const response = await AuthService.register(nombre, email, password);
     if (response.error) {
@@ -61,11 +60,11 @@ export const logout = async (req, res) => {
 
 export const refreshToken = async (req, res) => {  
   // Asiganmos el token a una variable
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers.authorization;  
   try {
     const refreshToken = authHeader.split(" ")[1];
     // Verificamos el token de accesso
-    const response = await AuthService.verifyAccessToken(refreshToken);
+    const response = await AuthService.verifyAccessToken(refreshToken);    
     // Llamamos el provider para centralizar los mensajes de respuesta
     ResponseProvider.success(
       res,
@@ -73,7 +72,7 @@ export const refreshToken = async (req, res) => {
       response.message,
       response.code
     );
-  } catch (error) {
+  } catch (error) {      
     // Llamamos el provider para centralizar los mensajes de respuesta
     ResponseProvider.error(res, "Error en el servidor", 500);
   }

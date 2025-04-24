@@ -24,16 +24,14 @@ class AuthService {
       const userExists = await Usuario.findByEmail(email);
       // Validamos si el correo ya esta registrado en la base de datos
       if (userExists)
-        return { error: true, code: 401, message: "El usuario ya existe" };
+        return { error: true, code: 401, message: "El corre ya se encuentra registrado en el sistema" };
       // Hashear la contraseña || encriptar la contraseña
       const hashedPassword = await bcrypt.hash(password, 10);
       // Registramos el usuario en la base de datos
       const userId = await Usuario.create(nombre, email, hashedPassword);
       // Retornamos la respuesta
       return { error: false, code: 201, message: "Usuario creado" };
-    } catch (error) {
-      console.log(error);
-      
+    } catch (error) {      
       return { error: true, code: 500, message: "Error al crear el usuario" };
     }
   }
@@ -123,17 +121,17 @@ class AuthService {
    *
    * @param {*} refreshToken
    */
-  static async verifyAccessToken(refreshToken) {
-    // const decoded = jwt.decode(refreshToken, { complete: true });
-
+  static async verifyAccessToken(refreshToken) {    
     try {      
       // Verificamos el token
       const decoded = jwt.verify(refreshToken, refreshSecretKey);
+      
       // Consultamos los datos del usuario en la base de datos
       const user = await Usuario.findByEmail(decoded.email);
       if (!user || user.refresh_token !== refreshToken) {
         return { error: true, code: 403, message: "Token inválido" };
       }
+      
       // Generamos nuevo access token
       const accessToken = this.generateAccessToken(user);
       // Validamos si tenemos que renovar el token de refreso y asignamos el nuevo
@@ -148,7 +146,7 @@ class AuthService {
           refreshToken,
           },
         };
-    } catch (error) {
+    } catch (error) {      
       if (error.name === "TokenExpiredError") {
         return {
           error: true,
