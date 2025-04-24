@@ -1,6 +1,8 @@
 import express from "express";
-import { validateCategoria } from "../middlewares/categorias/validarCategoria.js";
-import CategoriaController from "../controllers/CategoriaController.js";
+import CategoriaController from "../controllers/categoriaController.js";
+import { camposCategoria, parcialesCategoria } from "../middlewares/categorias/index.js";
+
+
 
 const router = express.Router();
 // Creamos una instancia del controlador
@@ -12,13 +14,13 @@ router.get("/", CategoriaController.getAllCategorias);
 router.get("/:id", CategoriaController.getCategoriaById);
 
 // Crear una nueva categoría
-router.post("/", validateCategoria, CategoriaController.createCategoria);
+router.post("/", camposCategoria, CategoriaController.createCategoria);
 
 // Actualizar una categoría
-router.put("/:id", CategoriaController.updateCategoria);
+router.put("/:id", camposCategoria, CategoriaController.updateCategoria);
 
 // Actualizar parcialmente una categoría
-router.patch("/:id", CategoriaController.updateCategoria);
+router.patch("/:id", parcialesCategoria, CategoriaController.updateCategoria);
 
 // Eliminar una categoría
 router.delete("/:id", CategoriaController.deleteCategoria);

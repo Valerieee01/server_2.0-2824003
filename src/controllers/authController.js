@@ -1,5 +1,5 @@
 import { ResponseProvider } from "../providers/ResponseProvider.js";
-import AuthService from "../services/authService.js";
+import AuthService from "../services/AuthService.js";
 
 export const register = async (req, res) => {
   const { nombre, email, password } = req.body;

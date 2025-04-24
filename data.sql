@@ -59,6 +59,11 @@ select * from categorias;
 select * from productos;
 select * from usuarios;
 
+describe productos;
+select * from categorias where id = 2;
+select * from productos where  categoria_id = 2;
+
+
 SELECT p.id, p.nombre AS producto, p.descripcion, p.precio, c.nombre AS categoria
 FROM productos p
 JOIN categorias c ON p.categoria_id = c.id;

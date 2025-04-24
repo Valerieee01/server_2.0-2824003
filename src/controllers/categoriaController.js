@@ -1,17 +1,33 @@
-import Categoria from "../models/Categoria.js";
+import { ResponseProvider } from "../providers/ResponseProvider.js";
+import CategoryService from "../services/CategoryService.js";
 
 class CategoriaController {
 
   // Obtener todas las categorías
-  static getAllCategorias = async (req, res) => {
-    try {    
-      // Crear una instancia de la clase Categoria
-      const OBJCategoria = new Categoria();
-      const categorias = await OBJCategoria.getAll();    
-      // Retorna todas las categorías
-      res.json(categorias); 
+  static getAllCategorias = async (req, res) => {    
+    try {
+      // Llamamos al servicio para obtener las categorías
+      const response = await CategoryService.getCategories();   
+      // Validamos si no hay categorías
+      if (response.error) {        
+        // Llamamos el provider para centralizar los mensajes de respuesta
+        return ResponseProvider.error(
+          res,
+          response.message,
+          response.code
+        );
+      } else {
+        // Llamamos el provider para centralizar los mensajes de respuesta        
+        return ResponseProvider.success(
+          res,
+          response.data,
+          response.message,
+          response.code
+        );
+       }
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      // Llamamos el provider para centralizar los mensajes de respuesta
+      ResponseProvider.error(res, "Error al interno en el servidor", 500);
     }
   };
 
@@ -19,59 +35,115 @@ class CategoriaController {
   static getCategoriaById = async (req, res) => {
     const { id } = req.params;
     try {
-      // Crear una instancia de la clase Categoria
-      const categoriaInstance = new Categoria(); 
-      const categoria = await categoriaInstance.getById(id);
-      // Retorna la categoría con el id solicitado
-      res.json(categoria); 
+      // Llamamos al servicio para obtener la categoría por su ID
+      const response = await CategoryService.getCategoryById(id);
+      if (response.error) {
+        // Llamamos el provider para centralizar los mensajes de respuesta
+        return ResponseProvider.error(
+          res,
+          response.message,
+          response.code
+        );
+      } else {        
+        // Llamamos el provider para centralizar los mensajes de respuesta
+        return ResponseProvider.success(
+          res,
+          response.data,
+          response.message,
+          response.code
+        );
+      }
     } catch (error) {
-      res.status(404).json({ error: error.message });
+      // Llamamos el provider para centralizar los mensajes de respuesta
+      ResponseProvider.error(res, "Error al interno en el servidor", 500);
     }
   };
 
   // Crear una nueva categoría
   static createCategoria = async (req, res) => {
-    const { nombre } = req.body;
+    const { nombre, descripcion } = req.body;
     try {
-      // Crear una instancia de la clase Categoria
-      const categoriaInstance = new Categoria(nombre);
-      const categoria = await categoriaInstance.create();
-      // Retorna la nueva categoría creada
-      res.status(201).json(categoria);
+      const response = await CategoryService.createCategory(
+        nombre,
+        descripcion
+      );
+      if (response.error) {
+        // Llamamos el provider para centralizar los mensajes de respuesta
+        return ResponseProvider.error(
+          res,
+          response.message,
+          response.code
+        );
+      } else {
+        // Llamamos el provider para centralizar los mensajes de respuesta
+        return ResponseProvider.success(
+          res,
+          response.data,
+          response.message,
+          response.code
+        );
+      }
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      // Llamamos el provider para centralizar los mensajes de respuesta
+      ResponseProvider.error(res, "Error al interno en el servidor", 500);
     }
   };
 
   // Actualizar una categoría
   static updateCategoria = async (req, res) => {
     const { id } = req.params;
-    const { nombre } = req.body;
+    // Los campos a actualizar se pasan en el cuerpo de la solicitud
+    const campos = req.body;
     try {
       // Crear una instancia de la clase Categoria
-      const categoriaInstance = new Categoria(nombre);
-      const categoria = await categoriaInstance.update(id);
-      // Agrega a la respuesta la categiria modificada
-      res.json(categoria);
+      const categoria = await CategoryService.updateCategory(id, campos);
+      // Validamos si no se pudo actualizar la categoría
+      if (categoria.error) {
+        ResponseProvider.error(
+          res,
+          categoria.message,
+          categoria.code
+        );
+      }
+      // Retornamos la respuesta cuando se actualiza correctamente
+      ResponseProvider.success(
+        res,
+        categoria.data,
+        categoria.message,
+        categoria.code
+      );
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      // Llamamos el provider para centralizar los mensajes de respuesta
+      ResponseProvider.error(res, "Error al interno en el servidor", 500);
     }
   };
 
   // Eliminar una categoría
   static deleteCategoria = async (req, res) => {
     const { id } = req.params;
-    // Crear una instancia de la clase Categoria
-    const categoriaInstance = new Categoria();
-    // Llamamos al método eliminar del modelo de categorías
-    const resultado = await categoriaInstance.delete(id);
-
-    // Validamos la respuesta del modelo
-    if (resultado.error) {
-      return res.status(400).json({ error: true, mensaje: resultado.mensaje });
+    try {
+      // Llamamos al servicio para eliminar la categoría
+      const response = await CategoryService.deleteCategory(id);
+      if (response.error) {
+        // Llamamos el provider para centralizar los mensajes de respuesta
+        ResponseProvider.error(
+          res,
+          response.message,
+          response.code
+        );
+      } else {
+        // Llamamos el provider para centralizar los mensajes de respuesta
+        ResponseProvider.success(
+          res,
+          response.data,
+          response.message,
+          response.code
+        );
+      }
+    } catch (error) {
+      // Llamamos el provider para centralizar los mensajes de respuesta
+      ResponseProvider.error(res, "Error al interno en el servidor", 500);
     }
-
-    return res.status(200).json({ error: false, mensaje: resultado.mensaje });
   };
 
 }
