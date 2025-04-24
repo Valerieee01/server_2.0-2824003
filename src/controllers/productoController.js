@@ -1,18 +1,34 @@
 import  Producto  from "../models/Producto.js";
+import { ResponseProvider } from "../providers/ResponseProvider.js";
+import ProductService from "../services/ProductService.js";
 
 class ProductoController{
 
   // Obtener todos los productos
   static getAllProductos = async (req, res) => {
     try {
-      // Creamos la instancia del modelo producto
-      const OBJProducto = new Producto();
-      // Llamamos el método listar
-      const productos = await OBJProducto.getAll();
-      // Retornamos todos los productos
-      res.json(productos);
+      const response = await ProductService.getProducts();
+      // Validamos si no hay productos
+      if (response.error) {
+        // Llamamos el provider para centralizar los mensajes de respuesta
+        return ResponseProvider.error(
+          res,
+          response.message,
+          response.code
+        );
+      }
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      return ResponseProvider.error(
+        res,
+        "Error interno en el servidor",
+        500
+      );
     }
   };
 
@@ -20,14 +36,30 @@ class ProductoController{
   static getProductoById = async (req, res) => {
     const { id } = req.params;
     try {
-      // Creamos la instancia de producto
-      const OBJProducto = new Producto();
-      // Llamamos el metodo consultar porducto por ID
-      const producto = await OBJProducto.getById(id);
-      // Retornamos el prodcuto con el id solicitado
-      res.json(producto);
+      // Llamamos al servicio para obtener el producto por su ID
+      const response = await ProductService.getProductById(id);
+      // Validamos si no hay producto
+      if (response.error) {
+        // Llamamos el provider para centralizar los mensajes de respuesta
+        return ResponseProvider.error(
+          res,
+          response.message,
+          response.code
+        );
+      }
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
     } catch (error) {
-      res.status(404).json({ error: error.message });
+      // Llamamos el provider para centralizar los mensajes de respuesta
+      return ResponseProvider.error(
+        res,
+        "Error interno en el servidor",
+        500
+      );
     }
   };
 
@@ -35,73 +67,107 @@ class ProductoController{
   static createProducto = async (req, res) => {  
     const { nombre, descripcion, precio, categoria_id } = req.body;  
     try {
-      // Creamos una instancia de producto
-      const OBJProducto = new Producto(nombre, descripcion, precio, categoria_id);
-      // Llamamos el método crear
-      const producto = await OBJProducto.create();
-      // Respondemos con el objeto creado
-      res.status(201).json(producto);
+      // Llamamos el método crear del modelo
+      const producto = await ProductService.createProduct(
+        nombre,
+        descripcion,
+        precio,
+        categoria_id
+      );
+      // Validamos que la respuesta no tenga error
+      if (producto.error) {
+        // Llamamos el provider para centralizar los mensajes de respuesta
+        return ResponseProvider.error(
+          res,
+          producto.message,
+          producto.code
+        );
+      }
+      // Retornamos el producto creado
+      return ResponseProvider.success(
+        res,
+        producto,
+        "Producto creado correctamente",
+        201
+      );
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      // Llamamos el provider para centralizar los mensajes de respuesta
+      return ResponseProvider.error(
+        res,
+        "Error interno al crear el producto",
+        500
+      );
     }
   };
 
   // Actualizar un producto
   static updateProducto = async (req, res) => {
     const { id } = req.params;
-    const { nombre, descripcion, categoria_id, precio } = req.body;
-    try {
-      // Creamos una instancia de producto
-      const OBJProducto = new Producto(nombre, descripcion, precio, categoria_id);
-      // Llamamos el método actualizar
-      const producto = await OBJProducto.update(id);
-      // Retornamos el producto actualizado
-      res.json(producto);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  };
-
-  // Actualización parcial del producto
-  static updatePartialProduct = async (req, res) => {
-    console.log(req.body);
-    const { id } = req.params;
-    // Los campos a actualizar se pasan en el cuerpo de la solicitud
     const campos = req.body;
     try {
       // Creamos una instancia de producto
       const OBJProducto = new Producto(id, campos);
-      const producto = await OBJProducto.updatePartial(id, campos);
-      if (!producto) {
-        return res
-          .status(404)
-          .json({ error: true, mensaje: "Producto no encontrado." });
+      // Llamamos al método actualizar del modelo
+      const producto = await ProductService.updateProduct(
+        id,
+        campos
+      );
+      // Validamos si no se pudo actualizar el producto
+      if (producto === null) {
+        return ResponseProvider.error(
+          res,
+          "Error al actualizar el producto",
+          400
+        );
       }
-      // Retornamos la respuesta
-      res.status(200).json({ error: false, producto: producto });
+      // Retornamos el producto actualizado
+      return ResponseProvider.success(
+        res,
+        producto,
+        "Producto actualizado correctamente",
+        200
+      );
     } catch (error) {
-      res.status(500).json({
-        error: true,
-        mensaje: "Error al actualizar parcialmente el producto.",
-      });
+      // Llamamos el provider para centralizar los mensajes de respuesta
+      return ResponseProvider.error(
+        res,
+        "Error interno al actualizar el producto",
+        500
+      );
     }
   };
 
   // Eliminar un producto
   static deleteProduct = async (req, res) => {
     const { id } = req.params;
-    // Creamos una instancia de producto
-    const OBJProducto = new Producto(id);
-    // Llamamos al método eliminar del modelo
-    const resultado = await OBJProducto.delete(id);
-
-    // Validamos la respuesta del modelo
-    if (resultado.error) {
-      return res.status(400).json({ error: true, mensaje: resultado.mensaje });
+    try {
+      // Llamamos al servicio para eliminar el producto por su ID
+      const response = await ProductService.deleteProduct(id);
+      // Validamos si no se pudo eliminar el producto
+      if (response.error) {
+        // Llamamos el provider para centralizar los mensajes de respuesta
+        return ResponseProvider.error(
+          res,
+          response.message,
+          response.code
+        );
+      }
+      // Retornamos el producto eliminado
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
+    } catch (error) {
+      // Llamamos el provider para centralizar los mensajes de respuesta
+      return ResponseProvider.error(
+        res,
+        "Error interno al eliminar el producto",
+        500
+      );
     }
-
-    return res.status(200).json({ error: false, mensaje: resultado.mensaje });
-  };
+  }
 
 }
 
