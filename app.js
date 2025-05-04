@@ -1,9 +1,9 @@
 import express from "express";
 // import multer from "multer";
-import dotenv from "dotenv";
-import cors from "cors";
-import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
+import dotenv from "dotenv"; // trabajar con el archivo de configuracion 
+import cors from "cors";// para trabajar fuera del dominio
+import bodyParser from "body-parser"; //parsear de lo que recibire en la informacion
+import cookieParser from "cookie-parser"; // autenticacion para enviar una cookie
 import productoRoutes from "./src/routes/productosRoutes.js";
 import categoriasRoutes from "./src/routes/categoriasRoutes.js";
 import authRoutes from "./src/routes/authRoutes.js";
