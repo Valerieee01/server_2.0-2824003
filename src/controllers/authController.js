@@ -5,7 +5,7 @@ export const register = async (req, res) => {
   const { nombre, email, password } = req.body;
   try {
     const response = await AuthService.register(nombre, email, password);
-    if (response.error) {
+    if (!response.error) {
       // Llamamos el provider para centralizar los mensajes de respuesta
       ResponseProvider.success(res, {}, response.message, response.code);
     } else {
