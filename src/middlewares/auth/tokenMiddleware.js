@@ -6,6 +6,8 @@ dotenv.config();
 
 export function verifyToken(req, res, next) {
   const authHeader = req.headers.authorization;  
+  console.log(authHeader);
+  
   // Validamos si la petición trea un token de autorización 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return ResponseProvider.error(
